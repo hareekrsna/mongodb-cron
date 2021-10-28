@@ -191,7 +191,7 @@ export class MongoCron {
     }, {
       $set: { [this.config.sleepUntilFieldPath]: sleepUntil },
     }, {
-      returnOriginal: false, // by default, documents are ordered by the sleepUntil field
+      returnOriginal: true, // return original document to calculate next start based on the original value
     });
     return res.value;
   }
@@ -215,7 +215,9 @@ export class MongoCron {
         currentDate: future.toDate(),
         endDate: dot.pick(this.config.repeatUntilFieldPath, doc),
       });
-      return interval.next().toDate();
+      const next = interval.next().toDate();
+      const now = moment().toDate();
+      return next < now ? now : next; // process old recurring jobs only once
     } catch (err) {
       return null;
     }

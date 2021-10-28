@@ -11,7 +11,7 @@ const spec = new Spec<{
 }>();
 
 spec.before(async (stage) => {
-  const mongo = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true });
+  const mongo = await MongoClient.connect('mongodb://localhost:27017', { useNewUrlParser: true, useUnifiedTopology: true });
   const db = mongo.db('test');
   const collection = db.collection('jobs');
   stage.set('mongo', mongo);
@@ -104,6 +104,46 @@ spec.test('locked documents should not be available for locking', async (ctx) =>
   await sleep(500);
   await cron.stop();
   ctx.is(processed, false);
+});
+
+spec.test('recurring documents should be unlocked when prossed', async (ctx) => {
+  let processed = 0;
+  const now = moment();
+  const collection = ctx.get('collection');
+  const cron = new MongoCron({
+    collection,
+    lockDuration: 60000,
+    onDocument: () => {
+      processed++;
+      return sleep(2000);
+    },
+  });
+  await collection.insertOne({
+    sleepUntil: now.toDate(),
+    interval: '* * * * * *',
+  });
+  await cron.start();
+  await sleep(6000);
+  await cron.stop();
+  ctx.is(processed, 3);
+});
+
+spec.test('recurring documents should process from current date', async (ctx) => {
+  let processed = 0;
+  const past = moment().subtract(10, 'days');
+  const collection = ctx.get('collection');
+  const cron = new MongoCron({
+    collection,
+    onDocument: () => processed++,
+  });
+  await collection.insertOne({
+    sleepUntil: past.toDate(), // should be treated as now() date
+    interval: '* * * * * *',
+  });
+  await cron.start();
+  await sleep(2000);
+  await cron.stop();
+  ctx.true(processed <= 4);
 });
 
 spec.test('condition should filter lockable documents', async (ctx) => {
