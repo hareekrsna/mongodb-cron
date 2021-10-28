@@ -2,4 +2,3 @@
 .vscode
 .nyc*
 node_modules
-dist

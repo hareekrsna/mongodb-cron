@@ -214,8 +214,9 @@ export class MongoCron {
         ...this.parserOptions,
         currentDate: future.toDate(),
         endDate: dot.pick(this.config.repeatUntilFieldPath, doc),
+        iterator: true
       });
-      const next = interval.next().toDate();
+      const next = interval.next().value.toDate();
       const now = moment().toDate();
       return next < now ? now : next; // process old recurring jobs only once
     } catch (err) {
