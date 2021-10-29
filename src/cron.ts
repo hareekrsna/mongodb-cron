@@ -1,8 +1,10 @@
 import * as parser from 'cron-parser';
 import * as dot from 'dot-object';
 import { promise as sleep } from 'es6-sleep';
-import * as moment from 'moment';
+import * as moment from 'moment-timezone';
 import { Collection } from 'mongodb';
+
+moment.tz.setDefault('Asia/Kolkata');
 
 /**
  * Configuration object interface.

@@ -13,7 +13,8 @@ exports.MongoCron = void 0;
 const parser = require("cron-parser");
 const dot = require("dot-object");
 const es6_sleep_1 = require("es6-sleep");
-const moment = require("moment");
+const moment = require("moment-timezone");
+moment.tz.setDefault('Asia/Kolkata');
 class MongoCron {
     constructor(config) {
         this.running = false;
