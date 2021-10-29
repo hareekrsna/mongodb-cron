@@ -34,7 +34,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xpepermint/mongodb-cron.git"
+    "url": "git+https://github.com/hareekrsna/mongodb-cron.git"
   },
   "keywords": [
     "mongo",
@@ -54,9 +54,9 @@
   "author": "Xpepermint (Kristijan Sedlak)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/xpepermint/mongodb-cron/issues"
+    "url": "https://github.com/hareekrsna/mongodb-cron/issues"
   },
-  "homepage": "https://github.com/xpepermint/mongodb-cron#readme",
+  "homepage": "https://github.com/hareekrsna/mongodb-cron#readme",
   "peerDependencies": {
     "mongodb": "^3.6.5"
   },
